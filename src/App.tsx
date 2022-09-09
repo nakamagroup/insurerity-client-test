@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 
 import Button from './components/Common/Button';
+import TableSkeleton from './components/Common/TableSkeleton';
 import TextInput from './components/Common/TextInput';
 import AppModal from './components/Complaint/ComplaintModal';
 import ComplaintTable from './components/Complaint/ComplaintTable';
@@ -44,7 +45,11 @@ function App() {
           openModal={openModal}
           isOpen={modalIsOpen}
         />
-        <ComplaintTable complaints={complaints} />
+        {loading ? (
+          <TableSkeleton numRows={5} />
+        ) : (
+          <ComplaintTable complaints={complaints} />
+        )}
       </div>
     </>
   );
