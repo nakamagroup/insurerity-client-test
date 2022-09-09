@@ -37,6 +37,7 @@ function App() {
     }
   }, [data, loading]);
 
+  const [search, setSearch] = useState('');
   const {
     currentPage,
     totalPages,
@@ -47,11 +48,9 @@ function App() {
     startIndex,
     endIndex,
   } = usePagination({
-    totalItems: complaints.length,
+    totalItems: search.length > 0 ? searchResults.length : complaints.length,
     initialPageSize: numItemsPerPage,
   });
-
-  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const newComplaints = complaints.filter(complaint => {
