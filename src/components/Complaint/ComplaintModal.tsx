@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 
-import { ADD_COMPLAINT } from '../../graphql/queries';
+import { ADD_COMPLAINT, FETCH_COMPLAINTS } from '../../graphql/queries';
 import { IComplaintModal } from '../../interfaces/complaint';
 import Button from '../Common/Button';
 
@@ -30,7 +30,12 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
   const [complaint, setComplaint] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [source, setSource] = useState('');
-  const [addComplaint] = useMutation(ADD_COMPLAINT);
+  const [addComplaint] = useMutation(ADD_COMPLAINT, {
+    refetchQueries: [
+      { query: FETCH_COMPLAINTS }, // DocumentNode object parsed with gql
+      'Complaints', // Query name
+    ],
+  });
 
   return (
     <div>
