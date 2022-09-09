@@ -1,7 +1,5 @@
-import './App.css';
-
-import { useQuery } from '@apollo/client';
-import React, { useEffect } from 'react';
+import React, { useQuery } from '@apollo/client';
+import { useEffect } from 'react';
 
 import { FETCH_COMPLAINTS } from './graphql/queries';
 
@@ -14,11 +12,7 @@ function App() {
     }
   }, [data, loading]);
 
-  return (
-    <div className="App">
-      <h1>Hello world</h1>
-    </div>
-  );
+  return <h1 className="text-3xl font-bold underline">Hello world!</h1>;
 }
 
 export default App;
