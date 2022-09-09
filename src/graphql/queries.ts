@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const FETCH_COMPLAINTS = gql`
   query Complaints {
-    complaint {
+    complaint(order_by: { created_at: asc }) {
       companyId
       complaint
       complaintId
