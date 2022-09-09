@@ -28,6 +28,7 @@ const customStyles = {
 
 const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
   const [complaint, setComplaint] = useState('');
+  const [hasErrors, setHasErrors] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [source, setSource] = useState('');
   const [addComplaint] = useMutation(ADD_COMPLAINT, {
@@ -36,6 +37,28 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
       'Complaints', // Query name
     ],
   });
+
+  const handleComplaintSubmit = () => {
+    if (hasErrors || complaint.trim() === '') {
+      setHasErrors(true);
+      return;
+    }
+    setIsLoading(true);
+    addComplaint({
+      variables: {
+        complaint,
+        companyId: 'ad6f4da8-06af-45be-ba79-83156a72471f',
+        source,
+        type: 'COMPLAINT',
+      },
+    })
+      .then(result => console.log(result))
+      .catch(e => console.log(e))
+      .finally(() => {
+        setIsLoading(false);
+        closeModal();
+      });
+  };
 
   return (
     <div>
@@ -54,16 +77,29 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
           </div>
 
           <div className="mb-6 px-5">
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+            <label
+              className={
+                'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
+              }>
               Complaint
             </label>
             <textarea
               onChange={({ target }) => {
+                setHasErrors(
+                  target.value === null || target.value?.trim() === '',
+                );
                 setComplaint(target.value);
               }}
               id="message"
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border ${
+                hasErrors
+                  ? 'border-red-600 dark:border-red-600 dark:focus:border-red-600 focus:border-red-600'
+                  : 'border-gray-300 dark:border-gray-600 dark:focus:border-blue-500 focus:border-blue-500'
+              } focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 `}
               placeholder="Your complaint"></textarea>
+            <p className="text-red-800 text-sm mt-2">
+              {hasErrors && 'Complaint is required'}
+            </p>
           </div>
           <div className="mb-6 px-5">
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
@@ -81,23 +117,7 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
               <Button
                 label={!isLoading ? 'Add Complaint' : 'Loading'}
                 disabled={isLoading}
-                onClick={() => {
-                  setIsLoading(true);
-                  addComplaint({
-                    variables: {
-                      complaint,
-                      companyId: 'ad6f4da8-06af-45be-ba79-83156a72471f',
-                      source,
-                      type: 'COMPLAINT',
-                    },
-                  })
-                    .then(result => console.log(result))
-                    .catch(e => console.log(e))
-                    .finally(() => {
-                      setIsLoading(false);
-                      closeModal();
-                    });
-                }}
+                onClick={handleComplaintSubmit}
               />
             </div>
           </div>
