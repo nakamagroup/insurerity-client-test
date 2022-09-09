@@ -54,7 +54,12 @@ function App() {
 
   useEffect(() => {
     const newComplaints = complaints.filter(complaint => {
-      return complaint.complaint.toLowerCase().includes(search.toLowerCase());
+      return (
+        complaint.complaint.toLowerCase().includes(search.toLowerCase()) ||
+        complaint.company.name.toLowerCase().includes(search.toLowerCase()) ||
+        complaint.source.toLowerCase().includes(search.toLowerCase()) ||
+        complaint.type.toLowerCase().includes(search.toLowerCase())
+      );
     });
     setSearchResults(newComplaints);
   }, [search]);
