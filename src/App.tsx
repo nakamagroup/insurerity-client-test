@@ -2,6 +2,7 @@ import { useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
 
 import Button from './components/Common/Button';
+import TableSkeleton from './components/Common/TableSkeleton';
 import TextInput from './components/Common/TextInput';
 import ComplaintTable from './components/Complaint/ComplaintTable';
 import { FETCH_COMPLAINTS } from './graphql/queries';
@@ -29,7 +30,11 @@ function App() {
           </div>
           <Button label={'Add new complaint'} />
         </div>
-        <ComplaintTable complaints={complaints} />
+        {loading ? (
+          <TableSkeleton numRows={5} />
+        ) : (
+          <ComplaintTable complaints={complaints} />
+        )}
       </div>
     </>
   );
