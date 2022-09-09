@@ -28,5 +28,6 @@ module.exports = {
     'simple-import-sort/exports': 'error',
     'react/prop-types': 'error',
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/restrict-template-expressions': 'off',
   },
 };
