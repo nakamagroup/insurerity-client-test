@@ -1,6 +1,9 @@
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { toast, ToastContainer } from 'react-toastify';
 
 import { ADD_COMPLAINT, FETCH_COMPLAINTS } from '../../graphql/queries';
 import { IComplaintModal } from '../../interfaces/complaint';
@@ -30,7 +33,7 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
   const [complaint, setComplaint] = useState('');
   const [hasErrors, setHasErrors] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [source, setSource] = useState('');
+  const [source, setSource] = useState('web');
   const [addComplaint] = useMutation(ADD_COMPLAINT, {
     refetchQueries: [
       { query: FETCH_COMPLAINTS }, // DocumentNode object parsed with gql
@@ -43,25 +46,46 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
       setHasErrors(true);
       return;
     }
-    setIsLoading(true);
-    addComplaint({
-      variables: {
-        complaint,
-        companyId: 'ad6f4da8-06af-45be-ba79-83156a72471f',
-        source,
-        type: 'COMPLAINT',
-      },
-    })
-      .then(result => console.log(result))
-      .catch(e => console.log(e))
-      .finally(() => {
-        setIsLoading(false);
-        closeModal();
-      });
+     setIsLoading(true);
+                  addComplaint({
+                    variables: {
+                      complaint,
+                      companyId: 'ad6f4da8-06af-45be-ba79-83156a72471f',
+                      source,
+                      type: 'COMPLAINT',
+                    },
+                  })
+                    .then(() =>
+                      toast.success('Complaint successfully lodged', {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      }),
+                    )
+                    .catch(() =>
+                      toast.warn('Error, Try again', {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      }),
+                    )
+                    .finally(() => {
+                      setIsLoading(false);
+                      closeModal();
+                    });
   };
 
   return (
     <div>
+      <ToastContainer />
       <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles}>
         <div className="dark:bg-gray-900 p-5">
           <div className="flex items-center justify-between">
