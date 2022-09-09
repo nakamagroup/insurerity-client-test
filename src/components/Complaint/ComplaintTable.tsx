@@ -28,7 +28,7 @@ const ComplaintTable = ({ complaints }: IComplaintTableProps) => (
       <tbody>
         {complaints.map((row, index) => (
           <ComplaintTableRow
-            key={row.complaintId}
+            key={`${row.complaintId}-${index + 1}`}
             rowNumber={index}
             complaintId={row.complaintId}
             complaint={row.complaint}

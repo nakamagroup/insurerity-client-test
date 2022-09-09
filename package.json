@@ -28,6 +28,7 @@
     "react-modal": "^3.15.1",
     "react-scripts": "5.0.1",
     "react-toastify": "^9.0.8",
+    "react-use-pagination": "^2.0.1",
     "typescript": "*",
     "web-vitals": "^2.1.4"
   },
