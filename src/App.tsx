@@ -1,13 +1,17 @@
 import { useQuery } from '@apollo/client';
 import React, { useEffect, useState } from 'react';
+import { usePagination } from 'react-use-pagination';
 
 import Button from './components/Common/Button';
+import Pagination from './components/Common/Pagination';
 import TableSkeleton from './components/Common/TableSkeleton';
 import TextInput from './components/Common/TextInput';
 import AppModal from './components/Complaint/ComplaintModal';
 import ComplaintTable from './components/Complaint/ComplaintTable';
 import { FETCH_COMPLAINTS } from './graphql/queries';
 import { IComplaint } from './interfaces/complaint';
+
+const numItemsPerPage: number = 10;
 
 function App() {
   const [modalIsOpen, setIsOpen] = React.useState(false);
@@ -31,6 +35,20 @@ function App() {
     }
   }, [data, loading]);
 
+  const {
+    currentPage,
+    totalPages,
+    setNextPage,
+    setPreviousPage,
+    nextEnabled,
+    previousEnabled,
+    startIndex,
+    endIndex,
+  } = usePagination({
+    totalItems: complaints.length,
+    initialPageSize: numItemsPerPage,
+  });
+
   return (
     <>
       <div className="max-w-5xl mx-auto p-4">
@@ -48,7 +66,21 @@ function App() {
         {loading ? (
           <TableSkeleton numRows={5} />
         ) : (
-          <ComplaintTable complaints={complaints} />
+          <>
+            <ComplaintTable
+              complaints={complaints.slice(startIndex, endIndex + 1)}
+            />
+            <Pagination
+              totalPages={totalPages}
+              totalItems={complaints.length}
+              setNextPage={setNextPage}
+              setPreviousPage={setPreviousPage}
+              previousEnabled={previousEnabled}
+              nextEnabled={nextEnabled}
+              currentPage={currentPage + 1}
+              numItemsPerPage={numItemsPerPage}
+            />
+          </>
         )}
       </div>
     </>
