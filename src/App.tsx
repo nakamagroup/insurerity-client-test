@@ -1,20 +1,22 @@
-import React, { useEffect } from 'react';
-import { useQuery } from '@apollo/client';
 import './App.css';
+
+import { useQuery } from '@apollo/client';
+import React, { useEffect } from 'react';
+
 import { FETCH_COMPLAINTS } from './graphql/queries';
 
 function App() {
-  const {loading, data} = useQuery(FETCH_COMPLAINTS);
+  const { loading, data } = useQuery(FETCH_COMPLAINTS);
 
   useEffect(() => {
-    if (data) {
-      console.log(data)
+    if (!loading) {
+      console.log(data);
     }
-  }, [data])
+  }, [data, loading]);
 
   return (
     <div className="App">
-     <h1>Hello world</h1>
+      <h1>Hello world</h1>
     </div>
   );
 }
