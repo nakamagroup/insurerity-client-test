@@ -31,6 +31,7 @@ const customStyles = {
 
 const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
   const [complaint, setComplaint] = useState('');
+  const [hasErrors, setHasErrors] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [source, setSource] = useState('web');
   const [addComplaint] = useMutation(ADD_COMPLAINT, {
@@ -40,53 +41,12 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
     ],
   });
 
-  return (
-    <div>
-      <ToastContainer />
-      <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles}>
-        <div className="dark:bg-gray-900 p-5">
-          <div className="flex items-center justify-between">
-            <div className="block mb-2 text-lg font-medium text-gray-900 dark:text-gray-300 flex-1">
-              New Complaint
-            </div>
-
-            <button
-              className="flex flex-row justify-end text-3xl mb-5 text-gray-900 dark:text-gray-300"
-              onClick={closeModal}>
-              {'\u00D7'}
-            </button>
-          </div>
-
-          <div className="mb-6 px-5">
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Complaint
-            </label>
-            <textarea
-              onChange={({ target }) => {
-                setComplaint(target.value);
-              }}
-              id="message"
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Your complaint"></textarea>
-          </div>
-          <div className="mb-6 px-5">
-            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-              Source
-            </label>
-            <select
-              onChange={({ target }) => {
-                setSource(target.value);
-              }}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-              <option value="Web">Web</option>
-              <option value="Mobile">Mobile</option>
-            </select>
-            <div className="flex flex-row w-full justify-end mt-5">
-              <Button
-                label={!isLoading ? 'Add Complaint' : 'Loading'}
-                disabled={isLoading}
-                onClick={() => {
-                  setIsLoading(true);
+  const handleComplaintSubmit = () => {
+    if (hasErrors || complaint.trim() === '') {
+      setHasErrors(true);
+      return;
+    }
+     setIsLoading(true);
                   addComplaint({
                     variables: {
                       complaint,
@@ -121,7 +81,67 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
                       setIsLoading(false);
                       closeModal();
                     });
-                }}
+  };
+
+  return (
+    <div>
+      <ToastContainer />
+      <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles}>
+        <div className="dark:bg-gray-900 p-5">
+          <div className="flex items-center justify-between">
+            <div className="block mb-2 text-lg font-medium text-gray-900 dark:text-gray-300 flex-1">
+              New Complaint
+            </div>
+
+            <button
+              className="flex flex-row justify-end text-3xl mb-5 text-gray-900 dark:text-gray-300"
+              onClick={closeModal}>
+              {'\u00D7'}
+            </button>
+          </div>
+
+          <div className="mb-6 px-5">
+            <label
+              className={
+                'block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300'
+              }>
+              Complaint
+            </label>
+            <textarea
+              onChange={({ target }) => {
+                setHasErrors(
+                  target.value === null || target.value?.trim() === '',
+                );
+                setComplaint(target.value);
+              }}
+              id="message"
+              className={`block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border ${
+                hasErrors
+                  ? 'border-red-600 dark:border-red-600 dark:focus:border-red-600 focus:border-red-600'
+                  : 'border-gray-300 dark:border-gray-600 dark:focus:border-blue-500 focus:border-blue-500'
+              } focus:ring-blue-500 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 `}
+              placeholder="Your complaint"></textarea>
+            <p className="text-red-800 text-sm mt-2">
+              {hasErrors && 'Complaint is required'}
+            </p>
+          </div>
+          <div className="mb-6 px-5">
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+              Source
+            </label>
+            <select
+              onChange={({ target }) => {
+                setSource(target.value);
+              }}
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+              <option value="Web">Web</option>
+              <option value="Mobile">Mobile</option>
+            </select>
+            <div className="flex flex-row w-full justify-end mt-5">
+              <Button
+                label={!isLoading ? 'Add Complaint' : 'Loading'}
+                disabled={isLoading}
+                onClick={handleComplaintSubmit}
               />
             </div>
           </div>
