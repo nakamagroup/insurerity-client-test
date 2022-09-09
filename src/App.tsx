@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
-import './App.css';
 import { FETCH_COMPLAINTS } from './graphql/queries';
 
 function App() {
-  const {loading, data} = useQuery(FETCH_COMPLAINTS);
+  const {data} = useQuery(FETCH_COMPLAINTS);
 
   useEffect(() => {
     if (data) {
@@ -13,9 +12,9 @@ function App() {
   }, [data])
 
   return (
-    <div className="App">
-     <h1>Hello world</h1>
-    </div>
+    <h1 className="text-3xl font-bold underline">
+      Hello world!
+    </h1>
   );
 }
 
