@@ -23,3 +23,10 @@ export interface IComplaintModal {
   openModal: () => void;
   closeModal: () => void;
 }
+
+export interface IComplaintModalProps {
+  complaint: string;
+  companyId: string;
+  source: string;
+  type: string;
+}
