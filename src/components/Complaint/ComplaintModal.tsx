@@ -1,6 +1,9 @@
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import Modal from 'react-modal';
+import { toast, ToastContainer } from 'react-toastify';
 
 import { ADD_COMPLAINT, FETCH_COMPLAINTS } from '../../graphql/queries';
 import { IComplaintModal } from '../../interfaces/complaint';
@@ -29,7 +32,7 @@ const customStyles = {
 const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
   const [complaint, setComplaint] = useState('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [source, setSource] = useState('');
+  const [source, setSource] = useState('web');
   const [addComplaint] = useMutation(ADD_COMPLAINT, {
     refetchQueries: [
       { query: FETCH_COMPLAINTS }, // DocumentNode object parsed with gql
@@ -39,6 +42,7 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
 
   return (
     <div>
+      <ToastContainer />
       <Modal isOpen={isOpen} onRequestClose={closeModal} style={customStyles}>
         <div className="dark:bg-gray-900 p-5">
           <div className="flex items-center justify-between">
@@ -91,8 +95,28 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
                       type: 'COMPLAINT',
                     },
                   })
-                    .then(result => console.log(result))
-                    .catch(e => console.log(e))
+                    .then(() =>
+                      toast.success('Complaint successfully lodged', {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      }),
+                    )
+                    .catch(() =>
+                      toast.warn('Error, Try again', {
+                        position: 'top-right',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                      }),
+                    )
                     .finally(() => {
                       setIsLoading(false);
                       closeModal();
