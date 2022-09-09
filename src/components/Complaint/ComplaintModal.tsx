@@ -46,41 +46,41 @@ const AppModal = ({ isOpen, closeModal }: IComplaintModal) => {
       setHasErrors(true);
       return;
     }
-     setIsLoading(true);
-                  addComplaint({
-                    variables: {
-                      complaint,
-                      companyId: 'ad6f4da8-06af-45be-ba79-83156a72471f',
-                      source,
-                      type: 'COMPLAINT',
-                    },
-                  })
-                    .then(() =>
-                      toast.success('Complaint successfully lodged', {
-                        position: 'top-right',
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                      }),
-                    )
-                    .catch(() =>
-                      toast.warn('Error, Try again', {
-                        position: 'top-right',
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                      }),
-                    )
-                    .finally(() => {
-                      setIsLoading(false);
-                      closeModal();
-                    });
+    setIsLoading(true);
+    addComplaint({
+      variables: {
+        complaint,
+        companyId: 'ad6f4da8-06af-45be-ba79-83156a72471f',
+        source,
+        type: 'COMPLAINT',
+      },
+    })
+      .then(() =>
+        toast.success('Complaint successfully lodged', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }),
+      )
+      .catch(() =>
+        toast.warn('Error, Try again', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        }),
+      )
+      .finally(() => {
+        setIsLoading(false);
+        closeModal();
+      });
   };
 
   return (
