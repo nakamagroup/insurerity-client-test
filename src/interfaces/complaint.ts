@@ -17,3 +17,9 @@ export interface IComplaintTableRowProps extends IComplaint {
 export interface IComplaintTableProps {
   complaints: IComplaint[];
 }
+
+export interface IComplaintModal {
+  isOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+}

@@ -4,11 +4,21 @@ import React, { useEffect, useState } from 'react';
 import Button from './components/Common/Button';
 import TableSkeleton from './components/Common/TableSkeleton';
 import TextInput from './components/Common/TextInput';
+import AppModal from './components/Complaint/ComplaintModal';
 import ComplaintTable from './components/Complaint/ComplaintTable';
 import { FETCH_COMPLAINTS } from './graphql/queries';
 import { IComplaint } from './interfaces/complaint';
 
 function App() {
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
   const { loading, data } = useQuery(FETCH_COMPLAINTS);
   const [complaints, setComplaints] = useState<IComplaint[]>([]);
 
@@ -28,8 +38,13 @@ function App() {
           <div className="">
             <TextInput />
           </div>
-          <Button label={'Add new complaint'} />
+          <Button onClick={openModal} label={'Add new complaint'} />
         </div>
+        <AppModal
+          closeModal={closeModal}
+          openModal={openModal}
+          isOpen={modalIsOpen}
+        />
         {loading ? (
           <TableSkeleton numRows={5} />
         ) : (
